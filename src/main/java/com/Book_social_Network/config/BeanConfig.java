@@ -1,6 +1,6 @@
 package com.Book_social_Network.config;
 
-import com.Book_social_Network.security.UserDetailsService;
+
 import com.Book_social_Network.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
