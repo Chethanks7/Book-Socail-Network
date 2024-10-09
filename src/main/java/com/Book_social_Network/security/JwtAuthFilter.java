@@ -14,34 +14,34 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class JwtAuthFilter  extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService ;
+    private final JwtService jwtService;
 
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                     @NonNull   HttpServletResponse response,
-                                  @NonNull  FilterChain filterChain
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-       if(request.getServletPath().contains("/auth/v1/auth")) {
-           filterChain.doFilter(request, response);
-           return;
-       }
+        if (request.getServletPath().contains("/auth/v1/auth")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-       final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-       final String jwt ;
-       final String userEmail ;
+        final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String jwt;
+        final String userEmail;
 
-       if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-           filterChain.doFilter(request,response);
-           return;
-       }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-       jwt = authHeader.substring(7);
-       userEmail = jwtService.extractUsername(jwt);
-
+        jwt = authHeader.substring(7);
+        userEmail = jwtService.extractUsername(jwt);
 
 
     }
