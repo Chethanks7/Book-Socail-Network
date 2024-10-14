@@ -33,3 +33,10 @@ application:
     jwt:
       secrete-key: e2d08eb5479b55c80e537500b03fc20a38f7386d87594a186d41f0fecf555919
       expiration: 8640000
+
+  mailing:
+    frontend:
+      activation-url: http://localhost:4200/activate-account
+
+server:
+  port: 8088

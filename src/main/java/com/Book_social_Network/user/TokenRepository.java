@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface TokenRepository extends JpaRepository<Token,Integer> {
+// TokenRepository interface for accessing Token entities in the database.
+public interface TokenRepository extends JpaRepository<Token, Integer> {
 
+    // Finds a Token entity by its token string.
     Optional<Token> findByToken(String token);
 }

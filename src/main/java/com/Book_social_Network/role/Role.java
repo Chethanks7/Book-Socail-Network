@@ -15,37 +15,35 @@ import java.util.List;
 
 @Getter
 @Setter
-@Table(name = "users")
+@Table(name = "users") // Specifies the table name in the database.
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@EntityListeners(AuditingEntityListener.class)
-
+@AllArgsConstructor // Generates a constructor with all arguments.
+@NoArgsConstructor // Generates a no-argument constructor.
+@Entity // Indicates that this class is a JPA entity.
+@EntityListeners(AuditingEntityListener.class) // Enables auditing features for this entity.
 public class Role implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L; // Serial version UID for serialization.
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id ;
-    @Column(unique = true, nullable = false)
-    private String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the ID.
+    private Integer id; // Unique identifier for the role.
 
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
-            mappedBy = "roles")
-    @JsonIgnore
-    private List<User> users;
+    @Column(unique = true, nullable = false) // Specifies that the name must be unique and cannot be null.
+    private String name; // Name of the role (e.g., "USER", "ADMIN").
 
+    @ManyToMany(fetch = FetchType.EAGER, // Defines a many-to-many relationship with the User entity.
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, // Specifies cascade operations.
+            mappedBy = "roles") // Specifies that this side is the inverse of the relationship.
+    @JsonIgnore // Prevents serialization of the users list to avoid circular references.
+    private List<User> users; // List of users associated with this role.
 
-    @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdTime;
+    @CreatedDate // Automatically sets the creation time.
+    @Column(nullable = false, updatable = false) // Specifies that this field cannot be null or updated.
+    private LocalDateTime createdTime; // Timestamp of when the role was created.
 
-    @LastModifiedDate
-    @Column(insertable = false)
-    private LocalDateTime lastUpdatedTime;
-
+    @LastModifiedDate // Automatically updates the last modified time.
+    @Column(insertable = false) // Specifies that this field should not be set during insertion.
+    private LocalDateTime lastUpdatedTime; // Timestamp of the last update to the role.
 }
