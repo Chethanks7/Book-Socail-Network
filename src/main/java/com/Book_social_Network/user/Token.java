@@ -23,7 +23,7 @@ public class Token {
 
     private LocalDateTime expiresAt; // The timestamp when the token expires.
 
-    private String validatedAt; // The timestamp when the token was validated (can be null if not validated).
+    private LocalDateTime validatedAt; // The timestamp when the token was validated (can be null if not validated).
 
     private LocalDateTime createdAt; // The timestamp when the token was created.
 
