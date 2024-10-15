@@ -9,17 +9,23 @@ services:
     volumes:
       - postgres:/data/postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
     networks:
       - spring-demo
     restart: unless-stopped
   mail-dev:
     container_name: mail-dev-bsn
-    image: mail-dev/mail-dev
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:1080" ]
+      interval: 1m30s       # Time between checks
+      timeout: 10s          # Time before check times out
+      retries: 3            # Number of retries before marking as unhealthy
+      start_period: 40s     # Wait time before starting health checks after container start
+      disable: true
+    image: maildev/maildev
     ports:
-      - 1080:1080
-      - 1025:1025
-
+      - "1080:1080"
+      - "1025:1025"
 
 networks:
   spring-demo:

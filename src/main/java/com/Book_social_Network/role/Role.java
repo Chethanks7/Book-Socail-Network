@@ -15,11 +15,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@Table(name = "users") // Specifies the table name in the database.
+@Table(name = "roles") // Specifies the table name in the database.
 @Builder
 @AllArgsConstructor // Generates a constructor with all arguments.
 @NoArgsConstructor // Generates a no-argument constructor.
-@Entity // Indicates that this class is a JPA entity.
+@Entity// Indicates that this class is a JPA entity.
 @EntityListeners(AuditingEntityListener.class) // Enables auditing features for this entity.
 public class Role implements Serializable {
 
