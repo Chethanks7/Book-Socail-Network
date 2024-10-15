@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication")
 public class AuthenticationController {
 
-    private final AuthenticationService service ;
+    private final AuthenticationService service;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -22,7 +22,21 @@ public class AuthenticationController {
             @RequestBody @Valid RegistrationRequest request
     ) throws MessagingException {
         service.register(request);
-return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<AuthenticationResponse> authentication(AuthenticationRequest request) {
+
+        return ResponseEntity.ok(service.authenticate(request));
+    }
+
+    @GetMapping("/activate-account")
+    public void confirm(
+            @RequestBody
+            String token
+    ) throws MessagingException {
+        service.activateAccount(token);
     }
 
 }
