@@ -3,6 +3,7 @@ package com.Book_social_Network.auth;
 import com.Book_social_Network.email.EmailService;
 import com.Book_social_Network.email.EmailTemplateName;
 import com.Book_social_Network.role.RoleRepository;
+import com.Book_social_Network.security.JwtService;
 import com.Book_social_Network.user.Token;
 import com.Book_social_Network.user.TokenRepository;
 import com.Book_social_Network.user.User;
@@ -10,12 +11,16 @@ import com.Book_social_Network.user.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -29,7 +34,8 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService ;
-
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Value("${application.mailing.frontend.activation-url}")
     private String activationUrl;
@@ -89,9 +95,9 @@ public class AuthenticationService {
      * @param user The user object to associate the token with.
      * @return The generated activation code.
      */
-    private String generateAndSaveActivationToken(User user) {
+    private @NotNull String generateAndSaveActivationToken(User user) {
         // Generate a 6-digit activation code.
-        String generateCode = generateActivationCode(6);
+        String generateCode = generateActivationCode();
 
         // Create a new Token object with the generated code and expiration time.
         var token = Token.builder()
@@ -109,21 +115,61 @@ public class AuthenticationService {
     /**
      * Generates a random numeric activation code of the given length.
      *
-     * @param length The length of the activation code.
      * @return The generated activation code as a string.
      */
-    private String generateActivationCode(int length) {
+    private @NotNull String generateActivationCode() {
         // Define the characters to use for generating the activation code (only digits).
         String characters = "0123456789";
         StringBuilder activationCode = new StringBuilder();
         SecureRandom random = new SecureRandom();
 
         // Generate a random string of the specified length.
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < 6; i++) {
             int randomChar = random.nextInt(characters.length());
             activationCode.append(characters.charAt(randomChar));
         }
 
         return activationCode.toString();
+    }
+
+
+    public AuthenticationResponse authenticate(@NotNull AuthenticationRequest request) {
+        var auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        var claims = new HashMap<String, Object>();
+        var user = ((User)auth.getPrincipal());
+        claims.put("fullName", user.fullName());
+        var jwt = jwtService.generateToken(claims,user);
+        return  AuthenticationResponse.builder()
+                .token(jwt)
+                .build() ;
+
+    }
+
+    @Transactional
+    public void activateAccount(String token) throws MessagingException {
+
+        Token savedToken = tokenRepository.findByToken(token).orElseThrow(
+                () -> new IllegalStateException("Token not found")
+        );
+
+        if(LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
+            sendValidationEmail(savedToken.getUser());
+            throw new IllegalStateException("Token is expired");
+        }
+
+        User user = userRepository.findById(savedToken.getUser().getId()).orElseThrow(
+                () -> new IllegalStateException("User not found")
+        );
+        user.setEnabled(true);
+        userRepository.save(user);
+        savedToken.setValidatedAt(LocalDateTime.now());
+        tokenRepository.save(savedToken);
+
     }
 }
