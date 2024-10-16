@@ -1,24 +1,26 @@
 package com.Book_social_Network.book;
 
+import com.Book_social_Network.common.BaseEntity;
+import com.Book_social_Network.feedback.Feedback;
+import com.Book_social_Network.history.BookTransactionHistory;
+import com.Book_social_Network.user.User;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Book {
+@SuperBuilder
+public class Book extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private Integer id;
     private String title;
     private String author;
     private String isbn;
@@ -26,20 +28,14 @@ public class Book {
     private boolean archived;
     private boolean sharable;
 
-    @CreatedDate
-    @Column(nullable = false,updatable = false)
-    private LocalDateTime creationDate;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner ;
 
-    @LastModifiedDate
-    @Column(insertable = false)
-    private LocalDateTime lastModificationDate;
+    @OneToMany(mappedBy = "book")
+    private List<Feedback> feedbacks ;
 
-    @CreatedBy
-    @Column(nullable = false,updatable = false)
-    private Integer createdBy ;
-
-    @LastModifiedBy
-    @Column(insertable = false)
-    private Integer lastModifiedBy;
+    @OneToMany(mappedBy = "book")
+    private List<BookTransactionHistory> histories ;
 
 }

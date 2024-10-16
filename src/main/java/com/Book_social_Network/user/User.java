@@ -1,5 +1,8 @@
 package com.Book_social_Network.user;
 
+import com.Book_social_Network.book.Book;
+import com.Book_social_Network.feedback.Feedback;
+import com.Book_social_Network.history.BookTransactionHistory;
 import com.Book_social_Network.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,6 +58,12 @@ public class User implements UserDetails, Principal, Serializable {
 
     @ManyToMany(fetch = FetchType.EAGER) // Defines a many-to-many relationship with Role.
     private List<Role> roles; // Roles assigned to the user.
+
+    @OneToMany(mappedBy = "owner")
+    List<Book> books;
+
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> histories ;
 
     @CreatedDate // Automatically sets the creation timestamp.
     @Column(nullable = false, updatable = false) // Column is non-nullable and not updatable.
