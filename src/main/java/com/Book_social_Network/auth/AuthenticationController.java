@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("auth")
 @RequiredArgsConstructor
 @Tag(name = "Authentication")
+@CrossOrigin("*")
 public class AuthenticationController {
 
     private final AuthenticationService service;
@@ -31,7 +32,6 @@ public class AuthenticationController {
             @RequestBody @Valid
             AuthenticationRequest request
     ){
-
         return ResponseEntity.ok(service.authenticate(request));
     }
 

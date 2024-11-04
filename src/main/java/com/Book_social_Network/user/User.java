@@ -65,8 +65,8 @@ public class User implements UserDetails, Principal, Serializable {
     @OneToMany(mappedBy = "user")
     private List<BookTransactionHistory> histories ;
 
-    @CreatedDate // Automatically sets the creation timestamp.
-    @Column(nullable = false, updatable = false) // Column is non-nullable and not updatable.
+    @CreatedDate
+    @Column(nullable = false, updatable = false)// Column is non-nullable and not updatable.
     private LocalDateTime createdTime; // Timestamp for when the user was created.
 
     @LastModifiedDate // Automatically sets the last modified timestamp.

@@ -141,13 +141,13 @@ public class AuthenticationService {
                 )
         );
 
-        var claims = new HashMap<String, Object>();
-        var user = ((User)auth.getPrincipal());
-        claims.put("fullName", user.fullName());
-        var jwt = jwtService.generateToken(claims,user);
-        return  AuthenticationResponse.builder()
-                .token(jwt)
-                .build() ;
+            var claims = new HashMap<String, Object>();
+            var user = ((User)auth.getPrincipal());
+            claims.put("fullName", user.fullName());
+            var jwt = jwtService.generateToken(claims,user);
+            return  AuthenticationResponse.builder()
+                    .token(jwt)
+                    .build() ;
 
     }
 
@@ -159,7 +159,7 @@ public class AuthenticationService {
         );
 
         if(LocalDateTime.now().isAfter(savedToken.getExpiresAt())) {
-            sendValidationEmail(savedToken.getUser());
+            //sendValidationEmail(savedToken.getUser());
             throw new IllegalStateException("Token is expired");
         }
 

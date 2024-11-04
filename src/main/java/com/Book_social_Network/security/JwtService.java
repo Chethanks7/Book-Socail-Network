@@ -45,7 +45,7 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
-        return buildToken(claims, userDetails, jwtExpiration); // Builds and returns the token with the specified claims and expiration.
+        return buildToken(claims, userDetails, jwtExpiration); // Builds and returns the jwt token with the specified claims and expiration.
     }
 
     private String buildToken(Map<String, Object> extraClaims, UserDetails userDetails, long jwtExpiration) {
@@ -99,7 +99,7 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         String username = extractUsername(token); // Extracts the username from the token.
         // Validates the token by checking the username and expiration.
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+            return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

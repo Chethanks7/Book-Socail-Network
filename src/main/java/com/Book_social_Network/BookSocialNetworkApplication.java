@@ -11,26 +11,26 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableJpaRepositories
 @EnableAsync
 public class BookSocialNetworkApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BookSocialNetworkApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BookSocialNetworkApplication.class, args);
+    }
 
 
-	@Bean
-	public CommandLineRunner runner(RoleRepository roleRepository) {
-		return args -> {
-			if(roleRepository.findByName("USER").isEmpty()) {
-				roleRepository.save(Role
-						.builder()
-						.name("USER")
-						.build());
-			}
-		};
-	}
+    @Bean
+    public CommandLineRunner runner(RoleRepository roleRepository) {
+        return args -> {
+            if (roleRepository.findByName("USER").isEmpty()) {
+                roleRepository.save(Role
+                        .builder()
+                        .name("USER")
+                        .build());
+            }
+        };
+    }
 
 }

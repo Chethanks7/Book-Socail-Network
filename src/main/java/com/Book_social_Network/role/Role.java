@@ -43,7 +43,7 @@ public class Role implements Serializable {
     @Column(nullable = false, updatable = false) // Specifies that this field cannot be null or updated.
     private LocalDateTime createdTime; // Timestamp of when the role was created.
 
-    @LastModifiedDate // Automatically updates the last modified time.
+    @LastModifiedDate // Automatically updates the last modified time common.
     @Column(insertable = false) // Specifies that this field should not be set during insertion.
     private LocalDateTime lastUpdatedTime; // Timestamp of the last update to the role.
 }

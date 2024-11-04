@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor // Generates a constructor with parameters for all fields.
 @NoArgsConstructor // Generates a no-arguments constructor.
 @Entity// Indicates that this class is a JPA entity.
-@EntityListeners(AuditingEntityListener.class)
 public class Token {
 
     @Id // Specifies the primary key of the entity.
